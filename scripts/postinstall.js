@@ -7,10 +7,18 @@ function patchJsArtoolkit5() {
     return;
   }
   const src = fs.readFileSync(target, 'utf8');
-  const before = "require('../build/artoolkit.debug')";
-  const after = "require('../build/artoolkit.min')";
-  if (src.includes(before)) {
-    const out = src.replace(before, after);
+  let out = src;
+  // Prefer global window.artoolkit when available to avoid bundling asm.js
+  const requireDebug = "var toolkit = require('../build/artoolkit.debug')";
+  const requireMin = "var toolkit = require('../build/artoolkit.min')";
+  const replacement =
+    "var toolkit = (typeof window !== 'undefined' && window.artoolkit) ? window.artoolkit : require('../build/artoolkit.min')";
+  if (out.includes(requireDebug)) {
+    out = out.replace(requireDebug, replacement);
+  } else if (out.includes(requireMin)) {
+    out = out.replace(requireMin, replacement);
+  }
+  if (out !== src) {
     fs.writeFileSync(target, out, 'utf8');
   }
 }
