@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "webvr template for IML",
   "scripts": {
-    "postinstall": "npm i -g parcel-bundler",
+    "postinstall": "node scripts/postinstall.js",
     "start": "parcel serve -d .serve index.html",
     "build": "parcel build -d docs --public-url ./ src/script.js"
   },
@@ -20,5 +20,8 @@
     "three": "^0.94.0",
     "three-gltf-loader": "^1.95.0",
     "three-orbit-controls": "^82.1.0"
+  },
+  "devDependencies": {
+    "parcel-bundler": "1.12.5"
   }
 }
